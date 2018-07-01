@@ -1,0 +1,23 @@
+language: c # python
+
+os: osx
+
+sudo: false
+
+matrix:
+  include:
+  - python: 3.7
+    env: TOXENV=py37
+
+script:
+- echo; echo '*** pyyaml broken by default with libyaml (libyaml installed by travis default)'; echo
+- brew update >/dev/null
+- brew upgrade python
+- python3 --version
+- pip3 install --no-cache-dir pyyaml
+- 'python3 -c ''import yaml; print(yaml.dump(yaml.load("foo: bar")))'''
+
+- echo; echo '*** uninstalling libyaml is a temporary fix until pyyaml 4.2'; echo
+- brew uninstall libyaml
+- pip3 install --no-cache-dir pyyaml
+- 'python3 -c ''import yaml; print(yaml.dump(yaml.load("foo: bar")))'''
